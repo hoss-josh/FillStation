@@ -1,0 +1,39 @@
+# FillStation
+
+FillStation is a Python-based project designed to interact with BLE (Bluetooth Low Energy) devices for analysis and label printing. The application connects to an analyzer device, performs live readings, and generates labels with the results, which can then be printed using a connected label printer.
+
+## Features
+- Connect to BLE analyzer devices.
+- Perform live readings and apply calibration data.
+- Generate labels with analysis results.
+- Print labels using available printers.
+
+## Requirements
+- Python 3.8 or higher
+- Dependencies listed in `requirements.txt` (e.g., `bleak` for BLE communication)
+
+## Usage
+1. Run the application using:
+   ```bash
+   python main.py
+   ```
+2. Follow the prompts to:
+   - Enter user initials.
+   - Connect to a BLE analyzer device.
+   - Perform analysis.
+   - Print the generated label.
+
+## Directory Structure
+- `main.py`: The main entry point of the application.
+- `gue_label.py`: Handles label creation.
+- `label_printer.py`: Manages printer selection and label printing.
+- `analyzer.py`: Contains logic for BLE device interaction and calibration.
+
+## Notes
+- The `SampleApp/` directory contains a web application that is currently under development and **not functional**. It is included in the repository for future expansion but should not be used at this time.
+
+## License
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+## Contributing
+Contributions are welcome! Please submit a pull request or open an issue for any suggestions or bug reports.
