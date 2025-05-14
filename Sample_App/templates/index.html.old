@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>O₂ Analyzer</title>
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="p-8 bg-gray-100">
+    <h1 class="text-2xl font-bold mb-4">O₂ Analyzer</h1>
+
+    <!-- Scan Devices -->
+    <button id="scan-button"
+            class="bg-blue-500 text-white px-4 py-2 rounded"
+            hx-get="/scan"
+            hx-target="#devices"
+            hx-swap="innerHTML">
+        Scan Devices
+    </button>
+    <ul id="devices" class="space-y-2 mt-4"></ul>
+
+    <!-- Actions -->
+    <div class="mt-8 space-x-2">
+        <button class="bg-green-500 text-white px-4 py-2 rounded"
+                hx-get="/read-once"
+                hx-target="#output"
+                hx-swap="innerHTML">
+            Read Once
+        </button>
+
+        <button class="bg-green-700 text-white px-4 py-2 rounded"
+                hx-get="/battery"
+                hx-target="#output"
+                hx-swap="innerHTML">
+            Battery Level
+        </button>
+
+        <input id="cal-percentage" placeholder="Calibration %" class="border px-2 py-1 rounded">
+        <button class="bg-yellow-500 text-white px-4 py-2 rounded"
+        onclick="htmx.ajax('POST', `/calibrate/${document.getElementById('cal-percentage').value}`, {target: '#output', swap: 'innerHTML'});">
+        Calibrate
+        </button>
+
+
+        <button id="start-live" class="bg-purple-500 text-white px-4 py-2 rounded">Start Live</button>
+    </div>
+
+    <!-- Output -->
+    <pre id="output" class="bg-white p-4 mt-4 border rounded h-64 overflow-y-auto">Output will appear here</pre>
+
+    <!-- Live WebSocket (only WebSocket part needs a tiny script) -->
+    <script>
+        document.getElementById('start-live').onclick = function() {
+            const ws = new WebSocket(`ws://${location.host}/live`);
+            ws.onmessage = e => document.getElementById('output').innerText = e.data;
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>O₂ Analyzer</title>
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="p-8 bg-gray-100">
+    <h1 class="text-3xl font-bold mb-6">O₂ Analyzer</h1>
+
+    <!-- Scan and Connect Panel -->
+    <div id="scan-panel" class="p-4 bg-white rounded-lg shadow mb-6">
+        <h2 class="text-xl font-semibold">Scan and Connect</h2>
+        <button id="scan-button"
+                class="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+                hx-get="/scan"
+                hx-target="#devices-list"
+                hx-swap="innerHTML">
+            Scan Devices
+        </button>
+        <div id="devices-list" class="space-y-2"></div>
+    </div>
+
+    <!-- Calibration Panel -->
+    <div id="calibration-panel" class="p-4 bg-white rounded-lg shadow mb-6">
+        <h2 class="text-xl font-semibold">Calibrate Device</h2>
+        <div class="space-x-2">
+            <input id="cal-percentage" placeholder="Enter Calibration %" class="border px-2 py-1 rounded">
+            <button class="bg-yellow-500 text-white px-4 py-2 rounded"
+                    hx-post="/calibrate/"
+                    hx-vals='js:{"percentage": document.getElementById("cal-percentage").value}'
+                    hx-target="#output"
+                    hx-swap="innerHTML">
+                Calibrate
+            </button>
+        </div>
+    </div>
+
+    <!-- Live Data Panel -->
+    <div id="live-panel" class="p-4 bg-white rounded-lg shadow mb-6">
+        <h2 class="text-xl font-semibold">Live Oxygen Readings</h2>
+        <button id="start-live"
+                class="bg-purple-500 text-white px-4 py-2 rounded mb-4"
+                onclick="startLiveCapture()">Start Live</button>
+        <button id="stop-live"
+                class="bg-red-500 text-white px-4 py-2 rounded mb-4 hidden"
+                onclick="stopLiveCapture()">Stop Live</button>
+    </div>
+
+    <!-- Output Panel -->
+<div id="output-panel" class="fixed inset-0 bg-black flex flex-col items-center justify-center text-white">
+    <div id="output" class="text-center">
+        <!-- Dynamic data will appear here -->
+        <div class="text-8xl font-extrabold text-green-400">Oxygen: --%</div>
+    </div>
+</div>
+
+    <script>
+        let ws = null;
+
+        function startLiveCapture() {
+            if (ws) return; // Already running
+            ws = new WebSocket(`ws://${location.host}/live`);
+            ws.onmessage = e => {
+                try {
+                    const data = JSON.parse(e.data);
+                    document.getElementById('output').innerHTML = `
+                        <div class="text-8xl font-extrabold text-green-400">Oxygen: ${data.oxygen}</div>
+                    `;
+
+                } catch {
+                    document.getElementById('output').innerText = e.data;
+                }
+            };
+            ws.onclose = () => {
+                ws = null;
+                document.getElementById('start-live').classList.remove('hidden');
+                document.getElementById('stop-live').classList.add('hidden');
+            };
+            document.getElementById('start-live').classList.add('hidden');
+            document.getElementById('stop-live').classList.remove('hidden');
+        }
+
+        function stopLiveCapture() {
+            if (ws) ws.close();
+        }
+    </script>
+</body>
+</html>

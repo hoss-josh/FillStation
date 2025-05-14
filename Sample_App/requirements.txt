@@ -1,0 +1,8 @@
+# Core
+fastapi
+uvicorn[standard]
+bleak
+jinja2
+
+# Optional Dev Tools
+watchdog      # For better file change detection (used by uvicorn)

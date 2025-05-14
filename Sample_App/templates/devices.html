@@ -1,0 +1,15 @@
+{% if devices %}
+    {% for d in devices %}
+        <li>
+            {{ d.name }} - {{ d.address }}
+            <button class="bg-green-500 text-white px-2 py-1 rounded ml-2"
+                    hx-post="/connect/{{ d.address }}"
+                    hx-target="#output"
+                    hx-swap="innerHTML">
+                Connect
+            </button>
+        </li>
+    {% endfor %}
+{% else %}
+    <li>No devices found.</li>
+{% endif %}

@@ -1,0 +1,37 @@
+## This is a sample of what the output dialog should display ##
+
+Enter Initials:
+Connect to {analyzer}? (y/n)
+
+# if n
+🔍 Scanning for BLE devices (5 seconds)...
+[0] DNA 001067 (A99E74D8-9628-F462-E7E9-2D54327F44AA)
+Select device [0-0]:
+
+# if y
+✅ Connected to A99E74D8-9628-F462-E7E9-2D54327F44AA
+Current reading {O2 %}. Would you like to calibrate? (y/n)
+
+# if y
+Enter calibration percentage (e.g., 21 or 100):
+
+Calibrating to 21.0% O₂...
+Calibration saved.
+✅ Calibrated at 919 for 21.0% O₂.
+
+# if n, continue
+O₂: 21.0%
+
+### I need to determine how to get the correct sample and pass that to the label printer ###
+
+✅ Label created at labels/filled_label_JPH_2025-05-13 16:24:44.352617.png
+⚠ No DYMO printers found. Listing all available printers:
+[1] Canon_MF440_Series
+[2] HP_DeskJet_2700_series
+[3] KONICAMINOLTA_bizhub_C368_B6_9D_CA
+Select printer by number (default 1):
+
+🖨️ Sending label to printer: HP_DeskJet_2700_series
+✅ Label sent to printer.
+
+Analyze another tank? (y/n)
